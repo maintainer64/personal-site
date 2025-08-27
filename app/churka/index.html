@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поздравление для Полицейской Девушки!</title>
+    <style>
+      body,
+      html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        /* Убираем скролл */
+        font-family: Arial, sans-serif;
+        background-color: black;
+        /* Тёмный фон */
+        color: #ffffff;
+        /* Белый текст */
+        text-align: center;
+      }
+
+      h1 {
+        color: #ff4081;
+        /* Розовый заголовок */
+        margin-top: 20px;
+      }
+
+      .game {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        /* На весь экран */
+      }
+
+      .game-wrapper {
+        width: auto;
+        z-index: 9999;
+      }
+
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #ff4081;
+        /* Розовая кнопка */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        margin-top: 20px;
+        transition: background-color 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #e91e63;
+        /* Темнее розовый при наведении */
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #gameCanvas {
+        display: block;
+        background-color: #2c2c2c;
+        /* Тёмный фон для canvas */
+        border-radius: 10px;
+        width: 50vw;
+        /* 50% ширины экрана */
+        height: 50vh;
+        /* 50% высоты экрана */
+      }
+
+      .video-container {
+        margin-top: 20px;
+      }
+
+      video {
+        width: 100%;
+        height: auto;
+        max-width: 800px;
+        border-radius: 10px;
+      }
+
+      .counter {
+        margin-top: 10px;
+        font-size: 18px;
+        color: #ff4081;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game">
+      <div class="game-wrapper">
+        <h1 onClick="confetti()" style="cursor:pointer">Поздравляем с 22-летием!</h1>
+        <p>Дорогая полицейская девушка, сегодня твой день! 🎉</p>
+        <p>Поймай всех преступников!</p>
+        <div id="game-content">
+          <button onclick="startGame()">Начать игру</button>
+        </div>
+        <div id="canvas-container" class="hidden">
+          <canvas id="gameCanvas"></canvas>
+          <div id="counter" class="counter"></div>
+          <!-- Счётчик преступников -->
+        </div>
+        <div id="end-game" class="hidden">
+          <h2>Поздравляем, ты прошла игру! 🎉</h2>
+          <button onclick="showGift()">Принять поздравление</button>
+        </div>
+        <div id="video-container" class="hidden video-container">
+          <video id="video" autoplay controls loop>
+            <source src="congratulations.mp4" type="video/mp4"> Ваш браузер не поддерживает видео.
+          </video>
+        </div>
+      </div>
+    </div>
+    <!-- Подключаем библиотеку js-confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/js-confetti@0.9.0/dist/js-confetti.browser.js"></script>
+    <script>
+      const minCriminals = 3;
+      const maxCriminals = 5;
+      const gameCanvas = document.getElementById('gameCanvas');
+      const ctx = gameCanvas.getContext('2d');
+      const counterElement = document.getElementById('counter'); // Элемент счётчика
+      // Устанавливаем размеры canvas
+      gameCanvas.width = window.innerWidth * 0.5; // 50% ширины экрана
+      gameCanvas.height = window.innerHeight * 0.5; // 50% высоты экрана
+      let isGameStarted = false;
+      let police = {
+        x: 50,
+        y: 50,
+        size: 40
+      }; // Полицейский (увеличиваем размер для изображения)
+      let criminals = []; // Преступники
+      const policeSpeed = 8; // Скорость полицейского
+      // Инициализация js-confetti с использованием jsConfettiCanvas
+      const jsConfetti = new JSConfetti();
+      // Загружаем изображения
+      const policeImage = new Image();
+      policeImage.src = 'police.png'; // Путь к изображению полицейского
+      const catImage = new Image();
+      catImage.src = 'cat.png'; // Путь к изображению кота
+      // Создаём преступников
+      function createCriminals() {
+        const count = Math.floor(Math.random() * (maxCriminals - minCriminals + 1)) + minCriminals;
+        for (let i = 0; i < count; i++) {
+          criminals.push({
+            x: Math.random() * gameCanvas.width,
+            y: Math.random() * gameCanvas.height,
+            size: 30, // Размер изображения кота
+            caught: false,
+            dx: (Math.random() - 0.5) * 4, // Случайное движение по X
+            dy: (Math.random() - 0.5) * 4, // Случайное движение по Y
+          });
+        }
+      }
+      // Обновляем счётчик преступников
+      function updateCounter() {
+        const remaining = criminals.filter(c => !c.caught).length;
+        counterElement.textContent = `Осталось преступников: ${remaining}`;
+      }
+
+      function startGame() {
+        document.getElementById('game-content').classList.add('hidden');
+        document.getElementById('canvas-container').classList.remove('hidden');
+        isGameStarted = true;
+        criminals = []; // Очищаем преступников
+        createCriminals(); // Создаём новых преступников
+        updateCounter(); // Обновляем счётчик
+        animate();
+      }
+
+      function drawPolice() {
+        // Рисуем изображение полицейского
+        ctx.drawImage(policeImage, police.x - police.size / 2, // Центрируем изображение
+          police.y - police.size / 2, police.size, police.size);
+      }
+
+      function drawCriminals() {
+        criminals.forEach(criminal => {
+          if (!criminal.caught) {
+            // Рисуем изображение кота
+            ctx.drawImage(catImage, criminal.x - criminal.size / 2, // Центрируем изображение
+              criminal.y - criminal.size / 2, criminal.size, criminal.size);
+          }
+        });
+      }
+
+      function moveCriminals() {
+        criminals.forEach(criminal => {
+          if (!criminal.caught) {
+            criminal.x += criminal.dx;
+            criminal.y += criminal.dy;
+            // Отскок от границ canvas
+            if (criminal.x < criminal.size || criminal.x > gameCanvas.width - criminal.size) {
+              criminal.dx *= -1;
+            }
+            if (criminal.y < criminal.size || criminal.y > gameCanvas.height - criminal.size) {
+              criminal.dy *= -1;
+            }
+          }
+        });
+      }
+
+      function checkCollision() {
+        criminals.forEach(criminal => {
+          if (!criminal.caught) {
+            const distance = Math.sqrt((police.x - criminal.x) ** 2 + (police.y - criminal.y) ** 2);
+            if (distance < police.size / 2 + criminal.size / 2) {
+              criminal.caught = true; // Преступник пойман
+              updateCounter(); // Обновляем счётчик
+            }
+          }
+        });
+        // Проверяем, все ли преступники пойманы
+        if (criminals.every(c => c.caught)) {
+          endGame();
+        }
+      }
+
+      function confetti() {
+        // Запускаем конфетти
+        jsConfetti.addConfetti({
+          emojis: ['🎉', '🎊', '✨', '🥳', '🎈'],
+          emojiSize: 50,
+          confettiNumber: 100,
+        });
+      }
+
+      function endGame() {
+        isGameStarted = false;
+        document.getElementById('canvas-container').classList.add('hidden');
+        document.getElementById('end-game').classList.remove('hidden');
+        confetti();
+      }
+
+      function animate() {
+        if (!isGameStarted) return;
+        ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+        drawPolice();
+        drawCriminals();
+        moveCriminals();
+        checkCollision();
+        requestAnimationFrame(animate);
+      }
+
+      function showGift() {
+        document.getElementById('end-game').classList.add('hidden');
+        document.getElementById('video-container').classList.remove('hidden');
+        const video = document.getElementById('video');
+        video.play(); // Автовоспроизведение видео
+      }
+      // Управление полицейским
+      window.addEventListener('keydown', (e) => {
+        if (!isGameStarted) return;
+        switch (e.key) {
+          case 'ArrowUp':
+            police.y = Math.max(police.y - policeSpeed, police.size / 2);
+            break;
+          case 'ArrowDown':
+            police.y = Math.min(police.y + policeSpeed, gameCanvas.height - police.size / 2);
+            break;
+          case 'ArrowLeft':
+            police.x = Math.max(police.x - policeSpeed, police.size / 2);
+            break;
+          case 'ArrowRight':
+            police.x = Math.min(police.x + policeSpeed, gameCanvas.width - police.size / 2);
+            break;
+        }
+      });
+    </script>
+  </body>
+</html>

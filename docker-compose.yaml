@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: docker.io/maintainer64/personal-site-public:latest
+    build:
+      context: .
+    container_name: hugo-nginx
+    ports:
+      - "80:80"
+    restart: unless-stopped

@@ -1,0 +1,92 @@
+baseURL = "https://gubanov.site"
+title = "By Gaben"
+languageCode = "ru-ru"
+theme = "hello-friend-ng"
+
+[pagination]
+pagerSize = 10
+
+enableRobotsTXT = true
+enableGitInfo = false
+enableEmoji = true
+disableRSS = true
+disableSitemap = false
+disable404 = false
+disableHugoGeneratorInject = false
+
+[params]
+author = "Gubanov Danil"
+dateform = "Jan 2, 2006"
+dateformShort = "Jan 2"
+dateformNum = "01.02.2006"
+dateformNumTime = "15:04 01.02.2006"
+
+# Subtitle for home
+homeSubtitle = "Welcome to gubanov.site"
+
+# Set disableReadOtherPosts to true in order to hide the links to other posts.
+disableReadOtherPosts = false
+
+# Default theme "light" or "dark"
+defaultTheme = "dark"
+
+# Enable sharing buttons, if you like
+enableSharingButtons = true
+
+# Enable SlickSlider
+enableSlickSlider = true
+
+# Enable theme toggle
+enableThemeToggle = true
+
+# Metadata mostly used in document's head
+description = "Blog gubanov.site in IT"
+keywords = "IT, information, hacks, works, homepage, blog"
+images = [""]
+
+# Footer site settings
+[params.footer]
+trademark = false
+author = false
+copyright = false
+rss = false
+
+# Social icons
+[[params.social]]
+name = "telegram"
+url = "https://t.me/gubanovdanil"
+
+[[params.social]]
+name = "email"
+url = "mailto:gubanov.code@gmail.com"
+
+[[params.social]]
+name = "github"
+url = "https://github.com/maintainer64"
+
+[[params.social]]
+name = "gitlab"
+url = "https://gitlab.com/gabenD"
+
+[taxonomies]
+category = "blog"
+tag = "tags"
+series = "series"
+
+[languages]
+[languages.en]
+title = "Добрый день!"
+subtitle = "Добро пожаловать на сайт мой сайт"
+keywords = ""
+copyright = '<a href="/" target="_blank" rel="noopener"></a>'
+readOtherPosts = "Read other posts"
+
+[languages.en.params.logo]
+logoText = "$ cd /home/"
+logoHomeLink = "/"
+
+# Menu configuration
+[[menu.main]]
+identifier = "blog"
+name = " Blog"
+url = "/posts"

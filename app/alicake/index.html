@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+        <title>Мегаторт из таблеток</title>
+        <style>
+            :root {
+                --bg1: #0f0c29;
+                --bg2: #302b63;
+                --bg3: #24243e;
+                --glass: rgba(255, 255, 255, 0.08);
+                --glass-strong: rgba(255, 255, 255, 0.14);
+                --white: #ffffff;
+                --text: #f7f7fb;
+                --muted: #cfd2ff;
+                --accent: #7aa2ff;
+                --good: #89ffb0;
+                --warn: #ffcb6b;
+                --bad: #ff6b6b;
+                --slot: #ffffff18;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html,
+            body {
+                height: 100%;
+                margin: 0;
+            }
+            body {
+                font-family:
+                    ui-sans-serif,
+                    system-ui,
+                    Segoe UI,
+                    Roboto,
+                    Apple Color Emoji,
+                    Noto Color Emoji,
+                    Arial,
+                    sans-serif;
+                color: var(--text);
+                background:
+                    radial-gradient(
+                        1200px 800px at 70% -10%,
+                        #3f3b86 0%,
+                        transparent 60%
+                    ),
+                    linear-gradient(
+                        135deg,
+                        var(--bg1) 0%,
+                        var(--bg2) 50%,
+                        var(--bg3) 100%
+                    );
+                height: 100dvh;
+                overflow: hidden;
+                user-select: none;
+            }
+            .layout {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .topbar {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 12px 16px;
+                gap: 12px;
+                background: linear-gradient(
+                    to bottom,
+                    rgba(0, 0, 0, 0.25),
+                    rgba(0, 0, 0, 0.05)
+                );
+            }
+            .title {
+                font-weight: 800;
+                letter-spacing: 0.2px;
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .title .cake {
+                font-size: 22px;
+                filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+            }
+            .progress {
+                opacity: 0.9;
+                font-size: 14px;
+            }
+            .right-controls {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .btn {
+                padding: 8px 12px;
+                background: var(--glass);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 10px;
+                color: var(--text);
+                cursor: pointer;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                transition:
+                    0.15s transform,
+                    0.2s background;
+                backdrop-filter: blur(6px);
+            }
+            .btn:hover {
+                background: var(--glass-strong);
+                transform: translateY(-1px);
+            }
+            .btn:active {
+                transform: translateY(0);
+            }
+            .game {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-height: 0;
+                padding: 8px 16px 12px;
+            }
+            .mixer {
+                flex: 1;
+                min-height: 280px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 18px;
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: linear-gradient(
+                    160deg,
+                    rgba(255, 255, 255, 0.06),
+                    rgba(255, 255, 255, 0.02)
+                );
+                position: relative;
+                overflow: hidden;
+            }
+            .mixer-title {
+                opacity: 0.9;
+                margin-bottom: 10px;
+                font-weight: 700;
+                letter-spacing: 0.3px;
+            }
+            .dropzone {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 24px;
+                padding: 18px 20px;
+                border-radius: 16px;
+                position: relative;
+            }
+            .slot {
+                width: 142px;
+                height: 142px;
+                border-radius: 16px;
+                border: 2px dashed rgba(255, 255, 255, 0.22);
+                background: linear-gradient(160deg, var(--slot), transparent);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                transition:
+                    border-color 0.2s,
+                    transform 0.2s,
+                    background 0.2s;
+            }
+            .slot.hover {
+                border-color: var(--accent);
+                transform: translateY(-2px);
+                background: rgba(122, 162, 255, 0.08);
+            }
+            .slot .placeholder {
+                opacity: 0.5;
+                font-size: 14px;
+                text-align: center;
+                padding: 0 10px;
+            }
+            .slots-sep {
+                opacity: 0.35;
+                font-size: 28px;
+                font-weight: 900;
+                letter-spacing: 2px;
+            }
+            .controls {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            .btn-small {
+                font-size: 13px;
+                padding: 6px 10px;
+                border-radius: 10px;
+                background: var(--glass);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                cursor: pointer;
+                color: var(--text);
+            }
+            .btn-small:hover {
+                background: var(--glass-strong);
+            }
+            .hint {
+                opacity: 0.7;
+                font-size: 13px;
+                margin-top: 6px;
+            }
+            .inventory {
+                background: linear-gradient(
+                    to top,
+                    rgba(0, 0, 0, 0.27),
+                    rgba(0, 0, 0, 0.12)
+                );
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 16px;
+                padding: 10px;
+                display: flex;
+                flex-direction: column;
+                min-height: 150px;
+            }
+            .inventory-head {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin: 2px 2px 8px 4px;
+                opacity: 0.9;
+                font-weight: 700;
+            }
+            .items {
+                display: flex;
+                gap: 10px;
+                overflow-x: auto;
+                padding-bottom: 6px;
+                scrollbar-width: thin;
+                min-height: 132px;
+            }
+            .tile {
+                flex: 0 0 auto;
+                width: 130px;
+                height: 120px;
+                border-radius: 14px;
+                background: linear-gradient(
+                    160deg,
+                    rgba(255, 255, 255, 0.08),
+                    rgba(255, 255, 255, 0.02)
+                );
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                cursor: grab;
+                position: relative;
+                transition:
+                    transform 0.12s,
+                    background 0.2s,
+                    border-color 0.2s;
+                backdrop-filter: blur(6px);
+            }
+            .tile:active {
+                cursor: grabbing;
+            }
+            .tile:hover {
+                transform: translateY(-3px);
+                background: rgba(255, 255, 255, 0.12);
+            }
+            .tile .icon {
+                font-size: 38px;
+                line-height: 1;
+                filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+            }
+            .tile .label {
+                font-size: 12.5px;
+                text-align: center;
+                opacity: 0.92;
+                padding: 0 8px;
+            }
+            .pill.red {
+                outline: 2px solid rgba(255, 80, 80, 0.55);
+            }
+            .pill.blue {
+                outline: 2px solid rgba(86, 138, 255, 0.55);
+            }
+            .pill.green {
+                outline: 2px solid rgba(104, 235, 170, 0.6);
+            }
+            .pill.red .pillbg {
+                background: radial-gradient(
+                    circle at 40% 40%,
+                    #ff9aa2,
+                    #ff4d4d
+                );
+            }
+            .pill.blue .pillbg {
+                background: radial-gradient(
+                    circle at 40% 40%,
+                    #a6b8ff,
+                    #4e79ff
+                );
+            }
+            .pill.green .pillbg {
+                background: radial-gradient(
+                    circle at 40% 40%,
+                    #b0ffd7,
+                    #19c97d
+                );
+            }
+            .pillbg {
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                opacity: 0.12;
+                filter: blur(1px);
+            }
+            .mini {
+                width: 110px;
+                height: 100px;
+                transform: scale(0.95);
+            }
+            .mixing::after {
+                content: "";
+                position: absolute;
+                width: 160px;
+                height: 160px;
+                border-radius: 50%;
+                background: radial-gradient(
+                    circle,
+                    rgba(122, 162, 255, 0.35) 0%,
+                    transparent 70%
+                );
+                animation: pulse 0.8s ease-in-out infinite;
+            }
+            @keyframes pulse {
+                0% {
+                    transform: scale(0.8);
+                    opacity: 0.6;
+                }
+                50% {
+                    transform: scale(1);
+                    opacity: 0.9;
+                }
+                100% {
+                    transform: scale(0.8);
+                    opacity: 0.6;
+                }
+            }
+            .nope {
+                animation: nope 0.28s ease-in-out;
+            }
+            @keyframes nope {
+                0%,
+                100% {
+                    transform: translateX(0);
+                }
+                25% {
+                    transform: translateX(-6px);
+                }
+                75% {
+                    transform: translateX(6px);
+                }
+            }
+            .result-pop {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(0.7);
+                padding: 10px 14px;
+                background: rgba(0, 0, 0, 0.45);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 20;
+                animation: pop 0.38s ease-out forwards;
+                backdrop-filter: blur(6px);
+            }
+            .result-pop .big {
+                font-size: 30px;
+            }
+            .result-pop .txt {
+                font-weight: 800;
+                letter-spacing: 0.3px;
+            }
+            @keyframes pop {
+                to {
+                    transform: translate(-50%, -50%) scale(1);
+                }
+            }
+            .toast {
+                position: fixed;
+                top: 14px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 10px 14px;
+                background: rgba(30, 30, 30, 0.85);
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                border-radius: 12px;
+                z-index: 9999;
+                display: none;
+                backdrop-filter: blur(8px);
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+                max-width: 90vw;
+            }
+            .toast.show {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                animation: toastIn 0.22s ease-out;
+            }
+            @keyframes toastIn {
+                from {
+                    transform: translate(-50%, -8px);
+                    opacity: 0.2;
+                }
+                to {
+                    transform: translate(-50%, 0);
+                    opacity: 1;
+                }
+            }
+            .overlay {
+                position: fixed;
+                inset: 0;
+                background: linear-gradient(
+                    180deg,
+                    rgba(0, 0, 0, 0.6),
+                    rgba(0, 0, 0, 0.4)
+                );
+                display: none;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            }
+            .overlay.show {
+                display: flex;
+            }
+            .victory-card {
+                width: min(560px, 92vw);
+                text-align: center;
+                border-radius: 20px;
+                background: linear-gradient(
+                    160deg,
+                    rgba(255, 255, 255, 0.14),
+                    rgba(255, 255, 255, 0.06)
+                );
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 22px 18px;
+                position: relative;
+                backdrop-filter: blur(10px);
+            }
+            .victory-card h2 {
+                margin: 8px 0 6px;
+                font-size: 28px;
+            }
+            .victory-card p {
+                margin: 0 0 14px;
+                opacity: 0.9;
+            }
+            .big-cake {
+                font-size: 64px;
+                filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.35));
+            }
+            .victory-actions {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+                margin-top: 10px;
+                flex-wrap: wrap;
+            }
+            .confetti {
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                overflow: hidden;
+                z-index: 10001;
+            }
+            .confetti-piece {
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                opacity: 0.9;
+                will-change: transform, opacity;
+                animation: fall linear forwards;
+            }
+            @keyframes fall {
+                0% {
+                    transform: translateY(-10vh) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(110vh) rotate(720deg);
+                    opacity: 0.95;
+                }
+            }
+            /* Mobile tweaks */
+            @media (max-width: 740px) {
+                .dropzone {
+                    gap: 14px;
+                }
+                .slot {
+                    width: 126px;
+                    height: 126px;
+                    border-radius: 14px;
+                }
+                .items {
+                    min-height: 122px;
+                }
+                .tile {
+                    width: 120px;
+                    height: 110px;
+                }
+                .mini {
+                    width: 100px;
+                    height: 90px;
+                }
+                .title {
+                    font-size: 18px;
+                }
+            }
+            .victory-media {
+                margin: 10px 0 4px;
+                display: flex;
+                justify-content: center;
+            }
+            .gif-frame {
+                padding: 2px;
+                border-radius: 16px;
+                background: linear-gradient(135deg, #ff9f1c, #7aa2ff, #ff85e3);
+                background-size: 200% 200%;
+                animation: gifShine 6s ease infinite;
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            }
+            .victory-gif {
+                display: block;
+                width: min(520px, 90vw);
+                height: auto;
+                border-radius: 14px;
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+
+            @keyframes gifShine {
+                0% {
+                    background-position: 0% 50%;
+                }
+                50% {
+                    background-position: 100% 50%;
+                }
+                100% {
+                    background-position: 0% 50%;
+                }
+            }
+
+            /* На очень узких экранах уменьшим высоту, чтобы не «плавало» */
+            @media (max-width: 420px) {
+                .victory-gif {
+                    width: min(420px, 92vw);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="layout">
+            <div class="topbar">
+                <div class="title">
+                    <span class="cake">🎂</span> Мегаторт из таблеток
+                </div>
+                <div class="progress" id="progress">Открыто 0/0</div>
+                <div class="right-controls">
+                    <button class="btn" id="helpBtn">❓ Правила</button>
+                    <button class="btn" id="fsBtn">⛶ Полный экран</button>
+                </div>
+            </div>
+
+            <div class="game">
+                <div class="mixer">
+                    <div class="mixer-title">
+                        Смешай 2 компонента — открой новые!
+                    </div>
+                    <div class="dropzone" id="dropzone">
+                        <div class="slot" data-slot="0">
+                            <div class="placeholder">Положи компонент</div>
+                        </div>
+                        <div class="slots-sep">+</div>
+                        <div class="slot" data-slot="1">
+                            <div class="placeholder">И ещё один</div>
+                        </div>
+                    </div>
+                    <div class="controls">
+                        <button class="btn-small" id="clearBtn">
+                            Очистить
+                        </button>
+                    </div>
+                    <div class="hint">
+                        Подсказка: можно нажать на плитку внизу или перетащить
+                        её в слот
+                    </div>
+                </div>
+
+                <div class="inventory">
+                    <div class="inventory-head">
+                        Инвентарь (открытое остаётся навсегда)
+                    </div>
+                    <div
+                        class="items"
+                        id="inventory"
+                        aria-label="Инвентарь"
+                    ></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+        <div class="overlay" id="helpOverlay" aria-hidden="true">
+            <div class="victory-card">
+                <div class="big-cake">🧪➕💊➕💊 = 🎂</div>
+                <h2>Как играть</h2>
+                <p>
+                    У тебя есть 3 таблетки. Смешивай любые два открытых
+                    компонента, чтобы получать новые. Когда получаешь компонент
+                    впервые — всплывашка подтверждает открытие.
+                </p>
+                <p>
+                    Цель: открыть «Мегаторт» 🎂🌈. Компоненты бесконечны —
+                    кликай и экспериментируй!
+                </p>
+                <div class="victory-actions">
+                    <button class="btn" id="closeHelp">Понятно!</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay" id="victoryOverlay" aria-hidden="true">
+            <div class="victory-card">
+                <div class="big-cake">🎂🌈</div>
+                <h2>МЕГАТОРТ ГОТОВ!</h2>
+                <p>
+                    Ты открыл финальный рецепт. Хочешь попробовать другие
+                    комбинации или начать заново?
+                </p>
+
+                <!-- Красивый GIF-блок -->
+                <div class="victory-media">
+                    <div class="gif-frame">
+                        <img
+                            src="demo.gif"
+                            alt="Кот и торт — победный момент"
+                            class="victory-gif"
+                        />
+                    </div>
+                </div>
+
+                <div class="victory-actions">
+                    <button class="btn" id="continueBtn">Продолжить</button>
+                    <button class="btn" id="restartBtn">Сыграть заново</button>
+                </div>
+            </div>
+            <div class="confetti" id="confetti"></div>
+        </div>
+
+        <script>
+            (() => {
+                const ALL_IDS = [
+                    "red_pill",
+                    "blue_pill",
+                    "green_pill",
+                    "fruit_essence",
+                    "warm_biscuit",
+                    "cold_cream",
+                    "berry_cream",
+                    "coated_biscuit",
+                    "aromatic_dough",
+                    "tender_layer",
+                    "cake_base",
+                    "cake_assembly",
+                    "sugar_crumble",
+                    "sprinkle",
+                    "megacake",
+                ];
+                const ITEMS = {
+                    red_pill: {
+                        name: "Красная таблетка",
+                        emoji: "💊",
+                        pill: "red",
+                    },
+                    blue_pill: {
+                        name: "Синяя таблетка",
+                        emoji: "💊",
+                        pill: "blue",
+                    },
+                    green_pill: {
+                        name: "Зелёная таблетка",
+                        emoji: "💊",
+                        pill: "green",
+                    },
+
+                    fruit_essence: { name: "Фруктовая эссенция", emoji: "🍓" },
+                    warm_biscuit: { name: "Бисквит", emoji: "🍪" },
+                    cold_cream: { name: "Крем", emoji: "🍦" },
+
+                    berry_cream: { name: "Ягодный крем", emoji: "🍓🍦" },
+                    coated_biscuit: {
+                        name: "Промазанный бисквит",
+                        emoji: "🍪🍦",
+                    },
+                    aromatic_dough: { name: "Ароматное тесто", emoji: "🥧" },
+
+                    tender_layer: { name: "Нежный слой", emoji: "🍰" },
+                    cake_base: { name: "Торт-основа", emoji: "🎂" },
+                    cake_assembly: { name: "Торт-сборка", emoji: "🍰🧩" },
+
+                    sugar_crumble: { name: "Сахарная крошка", emoji: "✨" },
+                    sprinkle: { name: "Присыпка", emoji: "🌟" },
+
+                    megacake: { name: "Мегаторт", emoji: "🎂🌈" },
+                };
+                const BASE = ["red_pill", "blue_pill", "green_pill"];
+
+                // Recipes: order-independent (two items -> result)
+                const recipes = new Map();
+                const key = (a, b) => [a, b].sort().join("+");
+                const add = (a, b, out) => recipes.set(key(a, b), out);
+
+                // Базовые комбинации
+                add("red_pill", "blue_pill", "fruit_essence"); // красная + синяя => эссенция
+                add("red_pill", "green_pill", "warm_biscuit"); // красная + зелёная => бисквит
+                add("blue_pill", "green_pill", "cold_cream"); // синяя + зелёная => крем
+
+                // Второй слой
+                add("fruit_essence", "cold_cream", "berry_cream"); // эссенция + крем => ягодный крем
+                add("warm_biscuit", "cold_cream", "coated_biscuit"); // бисквит + крем => промазанный бисквит
+                add("warm_biscuit", "fruit_essence", "aromatic_dough"); // бисквит + эссенция => ароматное тесто
+
+                // Сборка торта
+                add("coated_biscuit", "berry_cream", "tender_layer"); // слой
+                add("aromatic_dough", "tender_layer", "cake_base"); // основа
+                add("cake_base", "berry_cream", "cake_assembly"); // почти торт
+
+                // Украшения
+                add("red_pill", "red_pill", "sugar_crumble"); // красн.+красн. => сахарная крошка
+                add("sugar_crumble", "fruit_essence", "sprinkle"); // крошка + эссенция => присыпка
+
+                // Финал
+                add("cake_assembly", "sprinkle", "megacake"); // финал
+
+                // State
+                const state = {
+                    discovered: new Set(BASE),
+                    slots: [null, null],
+                    isMixing: false,
+                    total: ALL_IDS.length,
+                    showedVictory: false,
+                };
+
+                // Elements
+                const $inventory = document.getElementById("inventory");
+                const $progress = document.getElementById("progress");
+                const $dropzone = document.getElementById("dropzone");
+                const $slots = [...document.querySelectorAll(".slot")];
+                const $toast = document.getElementById("toast");
+                const $helpOverlay = document.getElementById("helpOverlay");
+                const $victory = document.getElementById("victoryOverlay");
+                const $confetti = document.getElementById("confetti");
+
+                // Load/save
+                const SAVE_KEY = "megatort_save_v1";
+                function save() {
+                    try {
+                        localStorage.setItem(
+                            SAVE_KEY,
+                            JSON.stringify({
+                                discovered: [...state.discovered],
+                                showedVictory: state.showedVictory,
+                            }),
+                        );
+                    } catch (e) {}
+                }
+                function load() {
+                    try {
+                        const raw = localStorage.getItem(SAVE_KEY);
+                        if (!raw) return;
+                        const data = JSON.parse(raw);
+                        if (Array.isArray(data.discovered)) {
+                            state.discovered = new Set(
+                                data.discovered.filter((id) =>
+                                    ALL_IDS.includes(id),
+                                ),
+                            );
+                            // Гарантируем наличие базовых
+                            BASE.forEach((b) => state.discovered.add(b));
+                        }
+                        if (data.showedVictory) state.showedVictory = true;
+                    } catch (e) {}
+                }
+
+                // UI
+                function updateProgress() {
+                    $progress.textContent = `Открыто ${state.discovered.size}/${state.total}`;
+                }
+
+                function makeTile(id, mini = false) {
+                    const it = ITEMS[id];
+                    const el = document.createElement("div");
+                    el.className = "tile" + (mini ? " mini" : "");
+                    if (it.pill) {
+                        el.classList.add("pill", it.pill);
+                        const bg = document.createElement("div");
+                        bg.className = "pillbg";
+                        el.appendChild(bg);
+                    }
+                    el.setAttribute("draggable", "true");
+                    el.dataset.id = id;
+                    const icon = document.createElement("div");
+                    icon.className = "icon";
+                    icon.textContent = it.emoji || "✨";
+                    const label = document.createElement("div");
+                    label.className = "label";
+                    label.textContent = it.name;
+                    el.append(icon, label);
+
+                    // Drag
+                    el.addEventListener("dragstart", (e) => {
+                        e.dataTransfer.setData("text/plain", id);
+                        e.dataTransfer.effectAllowed = "copy";
+                    });
+                    // Click to add
+                    el.addEventListener("click", () => addToMixer(id));
+
+                    return el;
+                }
+
+                function renderInventory() {
+                    $inventory.innerHTML = "";
+                    const ids = ALL_IDS.filter((id) =>
+                        state.discovered.has(id),
+                    );
+                    ids.forEach((id) => $inventory.appendChild(makeTile(id)));
+                }
+
+                function renderSlots() {
+                    $slots.forEach((slotEl, i) => {
+                        slotEl.innerHTML = "";
+                        const id = state.slots[i];
+                        if (id) {
+                            slotEl.appendChild(makeTile(id, true));
+                        } else {
+                            const pl = document.createElement("div");
+                            pl.className = "placeholder";
+                            pl.textContent =
+                                i === 0 ? "Положи компонент" : "И ещё один";
+                            slotEl.appendChild(pl);
+                        }
+                    });
+                }
+
+                function addToMixer(id) {
+                    if (state.isMixing) return;
+                    let idx = state.slots.indexOf(null);
+                    if (idx === -1) {
+                        // Автоочистка если оба заняты
+                        state.slots = [null, null];
+                        renderSlots();
+                        idx = 0;
+                    }
+                    state.slots[idx] = id;
+                    renderSlots();
+                    if (state.slots[0] && state.slots[1]) {
+                        setTimeout(mix, 280);
+                    }
+                }
+
+                function clearMixer(noAnim = false) {
+                    if (!noAnim) {
+                        $dropzone.classList.remove("mixing");
+                    }
+                    state.isMixing = false;
+                    state.slots = [null, null];
+                    renderSlots();
+                }
+
+                function mix() {
+                    if (state.isMixing) return;
+                    const [a, b] = state.slots;
+                    if (!a || !b) return;
+                    state.isMixing = true;
+                    $dropzone.classList.add("mixing");
+
+                    const out = recipes.get(key(a, b));
+                    setTimeout(() => {
+                        $dropzone.classList.remove("mixing");
+                        if (out) {
+                            const isNew = !state.discovered.has(out);
+                            // Show result pop
+                            showResultPop(out, isNew);
+                            // Update discovered
+                            if (isNew) {
+                                state.discovered.add(out);
+                                save();
+                                renderInventory();
+                                updateProgress();
+                                showToast(
+                                    `Новый компонент: ${ITEMS[out].emoji} ${ITEMS[out].name}`,
+                                );
+                                if (
+                                    out === "megacake" &&
+                                    !state.showedVictory
+                                ) {
+                                    state.showedVictory = true;
+                                    save();
+                                    setTimeout(showVictory, 350);
+                                }
+                            } else {
+                                // Optional toast for duplicate
+                                showToast(
+                                    `${ITEMS[out].emoji} ${ITEMS[out].name} уже открыт`,
+                                );
+                            }
+                        } else {
+                            // Nothing happened
+                            $dropzone.classList.add("nope");
+                            showToast("Хм... ничего не вышло 🤔", 1200);
+                            setTimeout(
+                                () => $dropzone.classList.remove("nope"),
+                                260,
+                            );
+                        }
+                        // Clear for next attempt
+                        setTimeout(() => clearMixer(true), 280);
+                    }, 700);
+                }
+
+                function showResultPop(id, isNew) {
+                    const el = document.createElement("div");
+                    el.className = "result-pop";
+                    el.innerHTML = `<div class="big">${ITEMS[id].emoji}</div>
+                        <div class="txt">${ITEMS[id].name}${isNew ? " ✨" : ""}</div>`;
+                    document.querySelector(".mixer").appendChild(el);
+                    setTimeout(() => el.remove(), 1200);
+                }
+
+                let toastTimer = null;
+                function showToast(text, ms = 1800) {
+                    $toast.textContent = text;
+                    $toast.classList.add("show");
+                    if (toastTimer) clearTimeout(toastTimer);
+                    toastTimer = setTimeout(
+                        () => $toast.classList.remove("show"),
+                        ms,
+                    );
+                }
+
+                function showVictory() {
+                    spawnConfetti(140);
+                    $victory.classList.add("show");
+                }
+                function hideVictory() {
+                    $victory.classList.remove("show");
+                    clearConfetti();
+                }
+
+                function spawnConfetti(count = 120) {
+                    clearConfetti();
+                    const colors = [
+                        "#ff6b6b",
+                        "#ffd93d",
+                        "#6bcB77",
+                        "#4d96ff",
+                        "#b28dff",
+                        "#ff9f1c",
+                        "#ff85e3",
+                    ];
+                    for (let i = 0; i < count; i++) {
+                        const p = document.createElement("div");
+                        p.className = "confetti-piece";
+                        const size = 6 + Math.random() * 9;
+                        p.style.width = size + "px";
+                        p.style.height = size + "px";
+                        p.style.left = Math.random() * 100 + "vw";
+                        p.style.top = -10 - Math.random() * 30 + "vh";
+                        p.style.background =
+                            colors[Math.floor(Math.random() * colors.length)];
+                        const dur = 3 + Math.random() * 3;
+                        p.style.animationDuration = dur + "s";
+                        p.style.animationDelay = Math.random() * 0.5 + "s";
+                        p.style.opacity = 0.8 + Math.random() * 0.2;
+                        $confetti.appendChild(p);
+                    }
+                }
+                function clearConfetti() {
+                    $confetti.innerHTML = "";
+                }
+
+                // Drag and drop on slots
+                ["dragover", "dragenter"].forEach((evt) =>
+                    $dropzone.addEventListener(evt, (e) => {
+                        e.preventDefault();
+                        $slots.forEach((s) => s.classList.add("hover"));
+                    }),
+                );
+                ["dragleave", "drop"].forEach((evt) =>
+                    $dropzone.addEventListener(evt, (e) => {
+                        $slots.forEach((s) => s.classList.remove("hover"));
+                    }),
+                );
+                $dropzone.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    const id = e.dataTransfer.getData("text/plain");
+                    if (ALL_IDS.includes(id) && state.discovered.has(id)) {
+                        addToMixer(id);
+                    }
+                });
+
+                document
+                    .getElementById("clearBtn")
+                    .addEventListener("click", () => clearMixer(true));
+
+                // Fullscreen
+                document
+                    .getElementById("fsBtn")
+                    .addEventListener("click", () => {
+                        if (!document.fullscreenElement) {
+                            document.documentElement.requestFullscreen?.();
+                        } else {
+                            document.exitFullscreen?.();
+                        }
+                    });
+
+                // Help overlay
+                const $helpBtn = document.getElementById("helpBtn");
+                const $closeHelp = document.getElementById("closeHelp");
+                $helpBtn.addEventListener("click", () =>
+                    $helpOverlay.classList.add("show"),
+                );
+                $closeHelp.addEventListener("click", () =>
+                    $helpOverlay.classList.remove("show"),
+                );
+                $helpOverlay.addEventListener("click", (e) => {
+                    if (e.target === $helpOverlay)
+                        $helpOverlay.classList.remove("show");
+                });
+
+                // Victory overlay buttons
+                document
+                    .getElementById("continueBtn")
+                    .addEventListener("click", hideVictory);
+                document
+                    .getElementById("restartBtn")
+                    .addEventListener("click", () => {
+                        localStorage.removeItem(SAVE_KEY);
+                        state.discovered = new Set(BASE);
+                        state.showedVictory = false;
+                        clearMixer(true);
+                        renderInventory();
+                        updateProgress();
+                        hideVictory();
+                        showToast("Прогресс сброшен. Поехали заново! 🚀", 1600);
+                    });
+
+                // Init
+                load();
+                renderInventory();
+                renderSlots();
+                updateProgress();
+                // Откроем подсказку только при первом запуске
+                if (state.discovered.size === BASE.length) {
+                    setTimeout(() => $helpOverlay.classList.add("show"), 500);
+                }
+
+                // Keyboard: Enter clears, Space mixes if possible
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape") clearMixer(true);
+                });
+            })();
+        </script>
+    </body>
+</html>

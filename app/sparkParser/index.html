@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XML and Base64 Processing</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-6">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-4">XML and Base64 Processing</h1>
+
+        <div class="mb-4">
+            <label for="jsonInput" class="block text-sm font-medium text-gray-700">JSON Input:</label>
+            <textarea id="jsonInput" rows="10" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+        </div>
+
+        <div class="mb-4">
+            <label for="textInput" class="block text-sm font-medium text-gray-700">XPath Expressions:</label>
+            <textarea id="textInput" rows="10" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+        </div>
+
+        <button onclick="processData()" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Process</button>
+
+        <div class="mt-4">
+            <label for="output" class="block text-sm font-medium text-gray-700">Output:</label>
+            <textarea id="output" rows="10" readonly class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50"></textarea>
+        </div>
+    </div>
+
+    <script>
+        function isBase64(str) {
+            try {
+                return btoa(atob(str)) === str;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        function decodeBase64Elements(element) {
+            if (element.childNodes.length === 0 && isBase64(element.textContent)) {
+                try {
+                    const decodedData = atob(element.textContent);
+                    element.textContent = decodedData;
+                } catch (err) {
+                    console.error('Error decoding base64:', err);
+                }
+            }
+
+            element.childNodes.forEach(child => decodeBase64Elements(child));
+        }
+
+        function findByXPath(xmlDoc, xpathExpression) {
+            const results = [];
+            const xpathResult = xmlDoc.evaluate(xpathExpression, xmlDoc, null, XPathResult.ANY_TYPE, null);
+            let node = xpathResult.iterateNext();
+            while (node) {
+                results.push(node.textContent);
+                node = xpathResult.iterateNext();
+            }
+            return results;
+        }
+
+        function findByXPathAuto(xmlDoc, xpathExpression) {
+            let results = findByXPath(xmlDoc, xpathExpression);
+            if (results.length) return results;
+
+            const paths = [
+                `//${xpathExpression}`,
+                `//Response/${xpathExpression}`,
+                `//Response/Data/${xpathExpression}`
+            ];
+
+            for (const path of paths) {
+                results = findByXPath(xmlDoc, path);
+                if (results.length) return results;
+            }
+
+            return [];
+        }
+
+        function viewParamsTerminal(symbols) {
+            return symbols.filter(x => x).join(';');
+        }
+
+        function processData() {
+            const jsonInput = document.getElementById('jsonInput').value;
+            const textInput = document.getElementById('textInput').value;
+
+            try {
+                const jsonData = JSON.parse(jsonInput);
+                const xmlString = jsonData.body;
+
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlString, 'application/xml');
+
+                decodeBase64Elements(xmlDoc.documentElement);
+
+                const xpathExpressions = textInput.split(/\r?\n/).map(line => line.trim());
+                const outputTextarea = document.getElementById('output');
+                outputTextarea.value = ''; // Clear previous output
+
+                xpathExpressions.forEach(xpath => {
+                    const result = findByXPathAuto(xmlDoc, xpath);
+                    const resultString = viewParamsTerminal(result);
+                    outputTextarea.value += resultString + '\n';
+                });
+            } catch (err) {
+                console.error('Error processing data:', err);
+            }
+        }
+    </script>
+</body>
+</html>
