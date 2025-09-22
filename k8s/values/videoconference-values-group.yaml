@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: videoconference-group-redirect-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: "https://tochka.ktalk.ru/iaqadqjjpv1r"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  tls:
+    - hosts:
+        - talk.cmslabs.ru
+      secretName: talk-cmslabs-ru-tls
+  rules:
+    - host: talk.cmslabs.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dummy-service
+                port:
+                  number: 80
