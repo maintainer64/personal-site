@@ -1,0 +1,17 @@
+Надо задавать переменную window.game = {words: ['первое слово', 'второе слово']}
+
+Спина пример
+https://gubanov.site/app/AHGEJLIHA/wordSet0.html
+
+Гриль
+https://gubanov.site/app/AHGEJLIHA/wordSet1.html
+
+Квест
+https://gubanov.site/app/AHGEJLIHA/wordSet2.html
+
+Штучка для часов
+https://gubanov.site/app/AHGEJLIHA/wordSet3.html
+
+Генотек
+https://gubanov.site/app/AHGEJLIHA/wordSet4.html
+https://www.genotek.ru/demo/dashboard
