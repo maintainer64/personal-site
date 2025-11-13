@@ -35,7 +35,8 @@ ContainerLab).
 
 ### Links
 
-[Презентация](/pdf/cms-labs.pdf)
+[Podlodka Go Crew](/pdf/podlodka.pdf)
+[Let's GoConf](/pdf/letsgoconf.pdf)
 
 ### Product
 
