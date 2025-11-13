@@ -3,7 +3,7 @@ WORKDIR /src
 RUN apk add --no-cache hugo git
 COPY . /src
 RUN mkdir -p /src/themes/hello-friend-ng && git clone --depth=1 --branch=master https://github.com/rhazdon/hugo-theme-hello-friend-ng.git /src/themes/hello-friend-ng
-RUN hugo --config config.toml --baseURL=https://gubanov:site -e production --minify
+RUN hugo --minify
 
 FROM docker.io/nginx:alpine
 COPY --from=build /src/public /usr/share/nginx/html
