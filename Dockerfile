@@ -1,6 +1,6 @@
 FROM docker.io/alpine:latest AS build
 WORKDIR /src
-RUN apk add --no-cache "hugo=0.153.5" git
+RUN apk add --no-cache "hugo=0.150.0" git
 COPY . /src
 RUN mkdir -p /src/themes/hello-friend-ng && git clone --depth=1 --branch=master https://github.com/rhazdon/hugo-theme-hello-friend-ng.git /src/themes/hello-friend-ng
 RUN hugo --minify
