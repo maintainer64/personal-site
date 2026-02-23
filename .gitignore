@@ -2,3 +2,4 @@ public/*
 *.DS_Store
 .idea
 themes
+**/node_modules
