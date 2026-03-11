@@ -1,7 +1,7 @@
 baseURL = "https://gubanov.site/"
 title = "By Gaben"
 languageCode = "ru-ru"
-theme = "hello-friend-ng"
+theme = "hello-abyss"
 
 [pagination]
 pagerSize = 10
