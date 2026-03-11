@@ -1,4 +1,5 @@
 baseURL = "https://gubanov.site/"
+canonifyURLs = false
 title = "By Gaben"
 languageCode = "ru-ru"
 theme = "hello-abyss"
