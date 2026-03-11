@@ -6,8 +6,9 @@ RUN apk add --no-cache git libc6-compat libstdc++ \
     && tar -xzf hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz -C /usr/local/bin \
     && rm hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz
 COPY . /src
-RUN mkdir -p /src/themes/hello-friend-ng && git clone --depth=1 --branch=1.0.7 https://github.com/rhazdon/hugo-theme-hello-friend-ng.git /src/themes/hello-friend-ng \
-    && sed -i 's|\.RSSLink|.OutputFormats.Get "RSS".Permalink|g' /src/themes/hello-friend-ng/layouts/partials/head.html
+RUN mkdir -p /src/themes/hello-friend-ng && git clone --depth=1 --branch=1.0.9 https://github.com/rhazdon/hugo-theme-hello-friend-ng.git /src/themes/hello-friend-ng \
+    && sed -i 's|{{ *if *\.RSSLink *}}|{{ with .OutputFormats.Get "rss" }}|g' /src/themes/hello-friend-ng/layouts/partials/head.html \
+    && sed -i 's|{{ *\.Site\.RSSLink *}}|{{ .Permalink }}|g' /src/themes/hello-friend-ng/layouts/partials/head.html
 RUN hugo --minify
 
 FROM docker.io/nginx:alpine
