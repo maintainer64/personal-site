@@ -3,6 +3,7 @@ version: '3.8'
 services:
   nginx:
     image: docker.io/maintainer64/personal-site-public:latest
+    platform: linux/amd64
     build:
       context: .
     container_name: hugo-nginx

@@ -11,8 +11,9 @@ enableEmoji = true
 disableSitemap = false
 disable404 = false
 
-[params]
-author = ["Gubanov Danil"]
+[params.author]
+    name = "Gubanov Danil"
+    email = "gubanov.code@gmail.com"
 dateform = "Jan 2, 2006"
 dateformShort = "Jan 2"
 dateformNum = "01.02.2006"
