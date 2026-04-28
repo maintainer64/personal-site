@@ -15,6 +15,17 @@ const dashboardConfig = {
     // Список сервисов
     services: [
         {
+            id: 8,
+            name: "N8N",
+            description: "Автоматизация процессо",
+            url: "https://n8n.maintainer.keenetic.link:8443",
+            icon: "📋",
+            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1k00R713k7ZYo_9QzEO7PIgUR8Ij3iguP_w&s",
+            category: "database",
+            tags: ["database", "process"],
+            backgroundColor: "#ffffff"
+        },
+        {
             id: 1,
             name: "Metabase",
             description: "BI и аналитика платформа",
@@ -35,28 +46,6 @@ const dashboardConfig = {
             category: "database",
             tags: ["database", "spreadsheet"],
             backgroundColor: "#509EE3"
-        },
-        {
-            id: 3,
-            name: "Plane",
-            description: "Управление проектами",
-            url: "https://plane.maintainer.keenetic.link:8443/openid",
-            icon: "✈️",
-            imageUrl: "https://plane.so/brand-logos/logo-with-wordmark.svg",
-            category: "productivity",
-            tags: ["project", "management"],
-            backgroundColor: "#FD7E14"
-        },
-        {
-            id: 4,
-            name: "Telegram Bot",
-            description: "Бот для уведомлений",
-            url: "https://t.me/cyberhome_maintainer64_bot",
-            icon: "🤖",
-            imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Telegram_2019_Logo.svg/512px-Telegram_2019_Logo.svg.png",
-            category: "communication",
-            tags: ["bot", "telegram", "notifications"],
-            backgroundColor: "#0088CC"
         },
         {
             id: 5,
@@ -98,7 +87,6 @@ const dashboardConfig = {
         {id: "all", name: "Все сервисы", icon: "🔮"},
         {id: "analytics", name: "Аналитика", icon: "📊"},
         {id: "database", name: "Базы данных", icon: "🗄️"},
-        {id: "productivity", name: "Продуктивность", icon: "⚡"},
         {id: "communication", name: "Коммуникации", icon: "💬"},
         {id: "iot", name: "Умный дом", icon: "🏠"},
         {id: "network", name: "Сеть", icon: "🌐"},
