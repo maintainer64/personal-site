@@ -1,4 +1,4 @@
-FROM docker.io/alpine:latest AS build
+FROM --platform=linux/amd64 docker.io/alpine:latest AS build
 WORKDIR /src
 ENV HUGO_VERSION=0.153.0
 RUN apk add --no-cache git libc6-compat libstdc++ \
@@ -6,10 +6,10 @@ RUN apk add --no-cache git libc6-compat libstdc++ \
     && tar -xzf hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz -C /usr/local/bin \
     && rm hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz
 COPY . /src
-RUN mkdir -p /src/themes/hello-abyss && git clone --depth=1 --branch=main https://github.com/maintainer64/hugo-theme-hello-abyss.git /src/themes/hello-abyss
+RUN mkdir -p /src/themes/hello-abyss && git clone --depth=1 --branch=master https://github.com/rhazdon/hugo-theme-hello-friend-ng.git /src/themes/hello-abyss
 RUN hugo --minify
 
-FROM docker.io/nginx:alpine
+FROM --platform=linux/amd64 docker.io/nginx:alpine
 COPY --from=build /src/public /usr/share/nginx/html
 COPY --from=build /src/app /usr/share/nginx/html/app
 EXPOSE 80
